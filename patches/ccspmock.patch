@@ -1,0 +1,15 @@
+diff --git a/source/util_api/ansc/AnscPlatform/user_openssl.c b/source/util_api/ansc/AnscPlatform/user_openssl.c
+index 9ea92de1..bc7dab76 100644
+--- a/source/util_api/ansc/AnscPlatform/user_openssl.c
++++ b/source/util_api/ansc/AnscPlatform/user_openssl.c
+@@ -39,6 +39,10 @@
+ #include "openssl/x509v3.h"
+ #include "ansc_platform.h"
+ 
++#ifndef X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS
++#define X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS 0x4
++#endif
++
+ #define  USER_OPENSSL_Redirect_AnscTrace            0
+ #if USER_OPENSSL_Redirect_AnscTrace
+     #undef  AnscTraceWarning
