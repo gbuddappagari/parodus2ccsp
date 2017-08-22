@@ -152,7 +152,8 @@ CosaWebpaInitialize
 	
 	if ( !pWebpaCfg )
 	{
-		return	(ANSC_HANDLE)NULL;
+            free(pWebpa);
+            return  (ANSC_HANDLE)NULL;
 	}
 
 	/* Get all webpa parameters values */

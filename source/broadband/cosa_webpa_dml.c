@@ -7,10 +7,6 @@
 #include "webpa_internal.h"
 #include "webpa_notification.h"
 
-#ifndef WEBPA_GIT_VERSION
-#define WEBPA_GIT_VERSION 2.0
-#endif
-
 extern PCOSA_BACKEND_MANAGER_OBJECT g_pCosaBEManager;
 
 void (*notifyCbFnPtr)(NotifyData*) = NULL;

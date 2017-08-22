@@ -1,4 +1,4 @@
-#   Copyright 2016 Comcast Cable Communications Management, LLC
+#   Copyright 2016 Comcast Cable Communications Management, LLCD
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -12,22 +12,18 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-add_test(NAME Simple COMMAND simple)
-
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -W -g -fprofile-arcs -ftest-coverage -O0")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTEST ")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -W  -g -fprofile-arcs -ftest-coverage -O0")
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -O0")
+set (WEBPA_COMMON_LIBS gcov -lcunit -lcimplog -lwrp-c -lpthread -lmsgpackc -lnopoll -lnanomsg -Wl,--no-as-needed -lcjson -ltrower-base64 -lssl -lcrypto -lrt -lm -lcmocka -llibparodus)
 
 link_directories ( ${LIBRARY_DIR} )
 
-add_executable(simple simple.c ../src/adapter.c)
+#-------------------------------------------------------------------------------
+#   test_libpd
+#-------------------------------------------------------------------------------
+add_test(NAME test_libpd COMMAND ${MEMORY_CHECK} ./test_libpd)
+add_executable(test_libpd test_libpd.c ../source/app/libpd.c)
+target_link_libraries (test_libpd -lwrp-c ${WEBPA_COMMON_LIBS})
 
-target_link_libraries (simple  gcov
-                               cunit
-                              -lcjson
-                              -lcimplog)
-
-add_custom_target(coverage
-                  COMMAND lcov -q --capture --directory ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/simple.dir/__/src --output-file coverage.info
-                  COMMAND genhtml coverage.info
-                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR})

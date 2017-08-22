@@ -36,7 +36,7 @@ static void setRebootReason(param_t param, WEBPA_SET_TYPE setType);
 extern ANSC_HANDLE bus_handle;
 void webpa_logger(unsigned int level, const char *module,
         const char *format, char *msg);
-        
+
 #ifndef FEATURE_SUPPORT_RDKLOG
 #define RDK_LOG webpa_logger
 #define LOGGER_MODULE "WEBPA"
@@ -123,7 +123,8 @@ void processRequest(char *reqPayload,char *transactionId, char **resPayload)
                                         
                                         resObj->u.getRes->params = (param_t **) malloc(sizeof(param_t*)*paramCount);
                                         memset(resObj->u.getRes->params, 0, sizeof(param_t*)*paramCount);
-                                
+
+                                    if (0 < nonWildcardParamCount) { 
                                         getValues(getParamList, nonWildcardParamCount, index, resObj->timeSpan, &resObj->u.getRes->params, &retCount, &ret);
                                         WalPrint("Non-Wildcard retCount : %d ret : %d\n",retCount, ret);
                                         for(i = 0; i < nonWildcardParamCount; i++)
@@ -135,7 +136,10 @@ void processRequest(char *reqPayload,char *transactionId, char **resPayload)
                                                 resObj->retStatus[i] = ret;
                                                 WalPrint("Response:> retStatus[%d] = %d\n",i,resObj->retStatus[i]);
                                         }
-                                        
+                                     } else {
+                                        WalPrint("Non-Wildcard count is zero!\n");
+                                       }   
+
                                         if(wildcardParamCount > 0)
                                         {
                                                 index = index+nonWildcardParamCount;

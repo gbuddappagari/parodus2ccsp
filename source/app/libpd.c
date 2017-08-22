@@ -1,4 +1,3 @@
-#include <time.h>
 #include <stdio.h>
 #include <libparodus.h>
 #include <string.h>
@@ -24,9 +23,7 @@ static void connect_parodus()
         //Retry Backoff count shall start at c=2 & calculate 2^c - 1.
         int c =2;
         int retval=-1;
-      
-	
-	pthread_detach(pthread_self());
+     
 
         max_retry_sleep = (int) pow(2, backoff_max_time) -1;
         WalInfo("max_retry_sleep is %d\n", max_retry_sleep );
@@ -231,28 +228,30 @@ static void get_parodus_url(char *parodus_url, char *client_url)
 		    }
 		   
 		}
+		fclose(fp);
 	}
 	else
 	{
 		WalError("Failed to open device.properties file:%s\n", DEVICE_PROPS_FILE);
 	}
-	fclose(fp);
 	
 	if (0 == parodus_url[0])
 	{
 		WalError("parodus_url is not present in device. properties:%s\n", parodus_url);
-	
 	}
-	
+	else
+	{
+	    WalPrint("parodus_url formed is %s\n", parodus_url);
+	}
 	if (0 == atom_ip[0])
 	{
 		WalError("atom_ip is not present in device. properties:%s\n", atom_ip);
-	
 	}
-	
-	snprintf(client_url, URL_SIZE, "tcp://%s:%d", atom_ip, CLIENT_PORT_NUM);
-	WalPrint("client_url formed is %s\n", client_url);
-	WalPrint("parodus_url formed is %s\n", parodus_url);	
+	else
+	{
+	    snprintf(client_url, URL_SIZE, "tcp://%s:%d", atom_ip, CLIENT_PORT_NUM);
+	    WalPrint("client_url formed is %s\n", client_url);
+	}
  
  }
  
