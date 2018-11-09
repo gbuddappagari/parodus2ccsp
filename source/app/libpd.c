@@ -10,6 +10,7 @@
 #include <sys/time.h>
 #include "libpd.h"
 #include "webpa_adapter.h"
+#include <parodus_notifier.h>
 
 #define CONTENT_TYPE_JSON       "application/json"
 #define DEVICE_PROPS_FILE   "/etc/device.properties"
@@ -409,46 +410,33 @@ int getConnCloudStatus(char *device_mac)
 
 void sendNotification(char *payload, char *source, char *destination)
 {
-    wrp_msg_t *notif_wrp_msg = NULL;
+    notifier_t *msg = NULL;
     int retry_count = 0;
     int sendStatus = -1;
     int backoffRetryTime = 0;
     int c=2;
-    char *contentType = NULL;
 
     if(source != NULL && destination != NULL)
     {
-        notif_wrp_msg = (wrp_msg_t *)malloc(sizeof(wrp_msg_t));
-        
-
-        if(notif_wrp_msg != NULL)
+        msg = (notifier_t *)malloc(sizeof(notifier_t));
+        if(msg != NULL)
         {
-	    memset(notif_wrp_msg, 0, sizeof(wrp_msg_t));
-	    notif_wrp_msg ->msg_type = WRP_MSG_TYPE__EVENT;
+	        memset(msg, 0, sizeof(wrp_msg_t));
             WalPrint("source: %s\n",source);
-            notif_wrp_msg ->u.event.source = source;
+            msg ->source = source;
             WalPrint("destination: %s\n", destination);
-            notif_wrp_msg ->u.event.dest = strdup(destination);
-            contentType = strdup(CONTENT_TYPE_JSON);
-            if(contentType != NULL)
-            {
-                notif_wrp_msg->u.event.content_type = contentType;
-                WalPrint("content_type is %s\n",notif_wrp_msg->u.event.content_type);
-            }
-            
-
+            msg ->destination = strdup(destination);
 	    if(payload != NULL)
             {
 	        WalInfo("Notification payload: %s\n",payload);
-		notif_wrp_msg ->u.event.payload = (void *)payload;
-                notif_wrp_msg ->u.event.payload_size = strlen(notif_wrp_msg ->u.event.payload);
+		msg ->payload = (void *)payload;
             }
 
             while(retry_count<=3)
             {
                 backoffRetryTime = (int) pow(2, c) -1;
 
-                sendStatus = libparodus_send(current_instance, notif_wrp_msg );
+                sendStatus = send_event_to_parodus(msg);
                 if(sendStatus == 0)
                 {
                     retry_count = 0;
@@ -466,8 +454,6 @@ void sendNotification(char *payload, char *source, char *destination)
             }
 
             WalPrint("sendStatus is %d\n",sendStatus);
-            wrp_free_struct (notif_wrp_msg );
-            WalPrint("Freed notif_wrp_msg struct.\n");
         }
     }
 }

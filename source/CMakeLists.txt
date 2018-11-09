@@ -18,7 +18,7 @@ set(HEADERS app/libpd.h)
 add_executable(webpa ${SOURCES} ${HEADERS})
 set(COMMON_LIBS -ldbus-1 -lccsp_common -lwrp-c -llibparodus -lnng -lpthread 
   -lwdmp-c -lmsgpackc -ltrower-base64 -lm 
-  -lcjson -lrt -luuid -lcimplog)
+  -lcjson -lrt -luuid -lcimplog -lparodusNotifier)
 if (BUILD_YOCTO)
 set(COMMON_LIBS "${COMMON_LIBS} -llog4c -lrdkloggers")
 endif()

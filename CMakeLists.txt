@@ -47,6 +47,7 @@ include_directories(${INCLUDE_DIR}
                     ${INCLUDE_DIR}/dbus-1.0
                     ${INCLUDE_DIR}/ccsp
                     ${INCLUDE_DIR}/ccsp/linux
+                    ${INCLUDE_DIR}/parodusNotifier
 		   )
 
 include_directories(
@@ -174,8 +175,8 @@ add_dependencies(libwrp-c wrp-c)
 ExternalProject_Add(libparodus
     DEPENDS trower-base64 msgpack nng wrp-c
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/_prefix/libparodus
-    GIT_REPOSITORY https://github.com/Comcast/libparodus.git
-    GIT_TAG "c1c0fad84004d10caab28f9810e8ad40e6b2451b"
+    GIT_REPOSITORY https://github.com/gbuddappagari/libparodus.git
+    GIT_TAG "parodusNotifier"
     CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
                   -DMAIN_PROJ_BUILD=ON
                   -DMAIN_PROJ_LIB_PATH=${LIBRARY_DIR}
